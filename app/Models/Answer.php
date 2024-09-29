@@ -13,7 +13,7 @@ class Answer extends Model
 
     protected $table = 'answers';
     protected $fillable = [
-        'quiz_id',
+        'question_id',
         'answer'
     ];
 

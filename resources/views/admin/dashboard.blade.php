@@ -10,6 +10,8 @@
 
     </div>
 
+
+
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -41,20 +43,26 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    Apple MacBook Pro 17"
-                                </th>
-                                <td class="px-6 py-4">
-                                    Silver
-                                </td>
-                                <td class="px-6 py-4">
-                                    Laptop
-                                </td>
-                                <td class="px-6 py-4">
-                                    $2999
-                                </td>
-                            </tr>
+                            @foreach($questions as $question)
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{$question ->question}}
+                                    </th>
+                                   <@foreach($question->answers as $answer)
+                                        <td class="px-6 py-4">
+                                            {{$answer->answer}}
+                                        </td>
+
+
+
+                                   @endforeach
+                                    <td class="px-6 py-4">
+                                        <a href="#" class="text-blue-600">Edit</a> |
+                                        <a href="#" class="text-red-600">Remove</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+
 
 
                             </tbody>

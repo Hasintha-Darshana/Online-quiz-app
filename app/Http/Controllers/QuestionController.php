@@ -41,7 +41,7 @@ class QuestionController extends Controller
 
         foreach($answers as $answer){
             Answer::create([
-                'quiz_id'=>$question->id,
+                'question_id'=>$question->id,
                 'answer'=>$answer,
             ]);
         }
