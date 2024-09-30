@@ -48,7 +48,7 @@
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{$question ->question}}
                                     </th>
-                                   <@foreach($question->answers as $answer)
+                                   @foreach($question->answers as $answer)
                                         <td class="px-6 py-4">
                                             {{$answer->answer}}
                                         </td>
@@ -57,7 +57,7 @@
 
                                    @endforeach
                                     <td class="px-6 py-4">
-                                        <a href="#" class="text-blue-600">Edit</a> |
+                                        <a href="{{route('edit-question', [$question->id])}}" class="text-blue-600">Edit</a> |
                                         <a href="#" class="text-red-600">Remove</a>
                                     </td>
                                 </tr>
