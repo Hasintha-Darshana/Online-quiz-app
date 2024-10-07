@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Question Count / Correct Answered Count
+            Total Question {{$totalQuestionCount}} / Correct Answered Count {{$correctAnswersCount}}
         </h2>
     </x-slot>
 
@@ -14,7 +14,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 
                 @if(session('message'))
-                    <div>{{session('message')}}</div>
+                    <div class="text-blue-600">{{session('message')}}</div>
                 @endif
                 <div class="grid grid-cols-3 p-6 text-gray-900 dark:text-gray-100">
 
