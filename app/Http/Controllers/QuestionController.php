@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Action\Admin\CreateQuestion;
 use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Http\Request;
@@ -19,34 +20,15 @@ class QuestionController extends Controller
         return view('admin.questions.create-question');
     }
 
-    public function addQuestion(QuestionCreateRequest $request): RedirectResponse
+    public function addQuestion(QuestionCreateRequest $request , CreateQuestion $createQuestion): RedirectResponse
     {
         $validatedQuestionCreateRequest = $request->validated();
 
-        $question = Question::create([
-            'question' =>   $validatedQuestionCreateRequest['question'],
-            'correct_answer' =>   $validatedQuestionCreateRequest['correct'],
-        ]);
-
-        if (! $question) {
-            return redirect()->route('dashboard');
-        }
-        $answers = [
-            'answer1' =>   $validatedQuestionCreateRequest['answer1'],
-            'answer2' =>   $validatedQuestionCreateRequest['answer2'],
-            'answer3' =>   $validatedQuestionCreateRequest['answer3'],
-            'answer4' =>   $validatedQuestionCreateRequest['answer4'],
-
-        ];
-
-        foreach ($answers as $answer) {
-            Answer::create([
-                'question_id'=>$question->id,
-                'answer'=>$answer,
-            ]);
+        if($validatedQuestionCreateRequest){
+            $createQuestion->createQuestionAndAnswers($validatedQuestionCreateRequest);
         }
 
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard')->with('warning' ,'Validation error');
     }
 
     /**
