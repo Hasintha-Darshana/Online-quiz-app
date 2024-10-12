@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Question;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
-use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -14,6 +13,7 @@ class AdminController extends Controller
     {
         //$questions = Question::all();
         $questions = Question::with('answers')->get();
-        return view('admin.dashboard') -> with(['questions' => $questions]);
+
+        return view('admin.dashboard')->with(['questions' => $questions]);
     }
 }

@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\QuestionCreateRequest;
 use App\Models\Answer;
 use App\Models\Question;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Foundation\Application;
+use App\Http\Requests\QuestionCreateRequest;
 
 class QuestionController extends Controller
 {
-
     public function createQuestion(): View|Factory|Application
     {
         return view('admin.questions.create-question');
@@ -24,16 +23,15 @@ class QuestionController extends Controller
     {
         $validatedQuestionCreateRequest = $request->validated();
 
-
         $question = Question::create([
             'question' =>   $validatedQuestionCreateRequest['question'],
             'correct_answer' =>   $validatedQuestionCreateRequest['correct'],
         ]);
 
-        if(!$question){
+        if (! $question) {
             return redirect()->route('dashboard');
         }
-        $answers =[
+        $answers = [
             'answer1' =>   $validatedQuestionCreateRequest['answer1'],
             'answer2' =>   $validatedQuestionCreateRequest['answer2'],
             'answer3' =>   $validatedQuestionCreateRequest['answer3'],
@@ -41,22 +39,22 @@ class QuestionController extends Controller
 
         ];
 
-        foreach($answers as $answer){
+        foreach ($answers as $answer) {
             Answer::create([
                 'question_id'=>$question->id,
                 'answer'=>$answer,
             ]);
         }
+
         return redirect()->route('dashboard');
     }
 
     /**
      * @param Request $request
+     *
      * @return void
      */
-
-
-    public function editQuestion( string $questionId)
+    public function editQuestion(string $questionId)
     {
         $question = Question::with('answers')->findOrFail($questionId);
 
@@ -65,7 +63,7 @@ class QuestionController extends Controller
         $answer3 = $question->answers[2]->answer;
         $answer4 = $question->answers[3]->answer;
 
-        $sendToBlade =[
+        $sendToBlade = [
             'question' => $question,
             'correct_answer' => $question->correct_answer,
             'answer1' => $answer1,
@@ -73,12 +71,9 @@ class QuestionController extends Controller
             'answer3' => $answer3,
             'answer4' => $answer4,
 
-
-
         ];
-        return view('admin.questions.update' )->with( $sendToBlade);
 
-
+        return view('admin.questions.update')->with($sendToBlade);
     }
 
     public function updateQuestion(string $questionID, QuestionCreateRequest $request)
@@ -87,13 +82,13 @@ class QuestionController extends Controller
 
         $question = Question::findOrFail($questionID);
 
-        DB::transaction(function () use ($question, $validatedQuestionUpdateRequest ) {
+        DB::transaction(function () use ($question, $validatedQuestionUpdateRequest) {
             $question->update([
                 'question' =>   $validatedQuestionUpdateRequest['question'],
                 'correct_answer' =>   $validatedQuestionUpdateRequest['correct'],
             ]);
 
-            $answers =[
+            $answers = [
                 'answer1' =>   $validatedQuestionUpdateRequest['answer1'],
                 'answer2' =>   $validatedQuestionUpdateRequest['answer2'],
                 'answer3' =>   $validatedQuestionUpdateRequest['answer3'],
@@ -101,20 +96,21 @@ class QuestionController extends Controller
 
             ];
 
-            foreach($question->answers as $index=>$answer){
+            foreach ($question->answers as $index=>$answer) {
                 $answer->update([
-                    'answer' =>$answers ['answer'.($index + 1)]
+                    'answer' =>$answers['answer'.($index + 1)],
                 ]);
             }
         });
-        return redirect()->route('dashboard');
 
+        return redirect()->route('dashboard');
     }
 
     public function deleteQuestion(string $questionId)
     {
         $question = Question::findOrFail($questionId);
         $question->delete();
+
         return redirect()->route('dashboard')->with('success', 'Question has been deleted');
     }
 }
