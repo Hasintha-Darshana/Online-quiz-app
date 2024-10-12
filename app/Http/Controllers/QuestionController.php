@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Action\Admin\CreateQuestion;
+use App\Action\Admin\GetQuestionDetailsForQuestionUpdate;
 use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Http\Request;
@@ -36,26 +37,16 @@ class QuestionController extends Controller
      *
      * @return void
      */
-    public function editQuestion(string $questionId)
+    public function editQuestion(
+        string $questionId,
+        GetQuestionDetailsForQuestionUpdate $getQuestionDetailsForQuestionUpdate
+    ): View|Factory|Application|RedirectResponse
     {
-        $question = Question::with('answers')->findOrFail($questionId);
+        if ($questionId) {
+            return $getQuestionDetailsForQuestionUpdate->getQuestionAndRelatedAnswersForUpdate($questionId);
+        }
 
-        $answer1 = $question->answers[0]->answer;
-        $answer2 = $question->answers[1]->answer;
-        $answer3 = $question->answers[2]->answer;
-        $answer4 = $question->answers[3]->answer;
-
-        $sendToBlade = [
-            'question' => $question,
-            'correct_answer' => $question->correct_answer,
-            'answer1' => $answer1,
-            'answer2' => $answer2,
-            'answer3' => $answer3,
-            'answer4' => $answer4,
-
-        ];
-
-        return view('admin.questions.update')->with($sendToBlade);
+        return redirect()->route('dashboard')->with('warning', 'validation error have');
     }
 
     public function updateQuestion(string $questionID, QuestionCreateRequest $request)
